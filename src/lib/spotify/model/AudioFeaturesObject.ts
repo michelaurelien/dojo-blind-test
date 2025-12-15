@@ -1,0 +1,25 @@
+import {TimeSignature} from "./TimeSignature"; 
+import {Tempo} from "./Tempo"; 
+import {Mode} from "./Mode"; 
+import {Loudness} from "./Loudness"; 
+import {Key} from "./Key"; 
+export type AudioFeaturesObject = {
+acousticness?: number;
+analysis_url?: string;
+danceability?: number;
+duration_ms?: number;
+energy?: number;
+id?: string;
+instrumentalness?: number;
+key?: Key;
+liveness?: number;
+loudness?: Loudness;
+mode?: Mode;
+speechiness?: number;
+tempo?: Tempo;
+time_signature?: TimeSignature;
+track_href?: string;
+type?: string;
+uri?: string;
+valence?: number;
+};
