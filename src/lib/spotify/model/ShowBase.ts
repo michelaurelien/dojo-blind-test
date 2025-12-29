@@ -1,19 +1,23 @@
+import { CopyrightObject } from "./CopyrightObject";
+import { ExternalUrlObject } from "./ExternalUrlObject";
+import { ImageObject } from "./ImageObject";
+
 export type ShowBase = {
-	available_markets: ;
-	copyrights: ;
+	available_markets: string[];
+	copyrights: CopyrightObject[];
 	description: string;
 	html_description: string;
 	explicit: boolean;
-	external_urls: ;
+	external_urls: ExternalUrlObject;
 	href: string;
 	id: string;
-	images: ;
+	images: ImageObject[];
 	is_externally_hosted: boolean;
-	languages: ;
+	languages: string[];
 	media_type: string;
 	name: string;
 	publisher: string;
-	type: string;
+	type: "show";
 	uri: string;
 	total_episodes: number;
 };

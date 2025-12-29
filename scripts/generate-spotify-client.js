@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 
 import openapi from "../openapi.json" assert { type: 'json' };
+import { log } from "console";
 
 const targetDirectory = "src/lib/spotify/model";
 
@@ -27,21 +28,65 @@ function generateType(typeName, typeSchema) {
 }
 
 function getGeneratedCode(typeName, typeSchema) {
-  const generatedType = getGeneratedType(typeSchema);
-
-  return `export type ${typeName} = ${generatedType};`;
+  let importList = []
+  const generatedType = getGeneratedType(typeSchema, importList);
+  let importString = ""
+  for(const element of importList){
+    importString += "import { " + element + " } from \"./" + element + "\";\n"
+  }
+  if(importList.length > 0){
+    importString += "\n"
+  }
+  return importString + `export type ${typeName} = ${generatedType};`;
 }
 
-function getGeneratedType(typeSchema) {
+function getGeneratedType(typeSchema, importList) {
+  if(typeSchema.$ref){
+    const namePath = typeSchema.$ref
+    const importName = namePath.split("/").at(-1)
+    if(!importList.includes(importName)){
+      importList.push(importName)
+    }
+    return importName
+  }
+
+  if(typeSchema.oneOf){
+    const unionList = typeSchema.oneOf
+    let nameList = []
+    for(const element of unionList){
+      nameList.push(getGeneratedType(element, importList))
+    }
+    return "(" + nameList.join(" | ") + ")"
+  }
+
+  if(typeSchema.allOf){
+    const allOfList = typeSchema.allOf
+    let nameList = []
+    for(const element of allOfList){
+      nameList.push(getGeneratedType(element, importList))
+    }
+    return nameList.join(" & ")
+  }
   const schemaType = typeSchema.type;
 
   // TO DO: Generate typescript code from schema
   switch (schemaType) {
     case "number": return "number"
     case "integer": return "number"
-    case "string": return "string"
+    case "string": 
+      if(typeSchema.enum){
+        const enumList = typeSchema.enum
+        let nameList = []
+        for(const element of enumList){
+          nameList.push(element)
+        }
+        return "\"" + nameList.join("\" | \"") + "\""
+      }
+      return "string"
     case "boolean": return "boolean"
     case "array":
+      return getGeneratedType(typeSchema.items, importList) + "[]"
+
     case "object":
       try{
         if(typeSchema.properties){
@@ -58,7 +103,7 @@ function getGeneratedType(typeSchema) {
             if(!requiredSet.has(key)){
               returnString += '?'
             }
-            returnString += ": " + getGeneratedType(value) + ";\n"
+            returnString += ": " + getGeneratedType(value, importList) + ";\n"
           }
           returnString += "}"
           return returnString

@@ -1,12 +1,16 @@
+import { ExternalUrlObject } from "./ExternalUrlObject";
+import { FollowersObject } from "./FollowersObject";
+import { ImageObject } from "./ImageObject";
+
 export type ArtistObject = {
-	external_urls?: ;
-	followers?: ;
-	genres?: ;
+	external_urls?: ExternalUrlObject;
+	followers?: FollowersObject;
+	genres?: string[];
 	href?: string;
 	id?: string;
-	images?: ;
+	images?: ImageObject[];
 	name?: string;
 	popularity?: number;
-	type?: string;
+	type?: "artist";
 	uri?: string;
 };

@@ -1,21 +1,27 @@
+import { AuthorObject } from "./AuthorObject";
+import { CopyrightObject } from "./CopyrightObject";
+import { ExternalUrlObject } from "./ExternalUrlObject";
+import { ImageObject } from "./ImageObject";
+import { NarratorObject } from "./NarratorObject";
+
 export type AudiobookBase = {
-	authors: ;
-	available_markets: ;
-	copyrights: ;
+	authors: AuthorObject[];
+	available_markets: string[];
+	copyrights: CopyrightObject[];
 	description: string;
 	html_description: string;
 	edition?: string;
 	explicit: boolean;
-	external_urls: ;
+	external_urls: ExternalUrlObject;
 	href: string;
 	id: string;
-	images: ;
-	languages: ;
+	images: ImageObject[];
+	languages: string[];
 	media_type: string;
 	name: string;
-	narrators: ;
+	narrators: NarratorObject[];
 	publisher: string;
-	type: string;
+	type: "audiobook";
 	uri: string;
 	total_chapters: number;
 };

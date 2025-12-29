@@ -6,6 +6,6 @@ export type SegmentObject = {
 	loudness_max?: number;
 	loudness_max_time?: number;
 	loudness_end?: number;
-	pitches?: ;
-	timbre?: ;
+	pitches?: number[];
+	timbre?: number[];
 };
