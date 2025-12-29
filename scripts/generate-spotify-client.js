@@ -37,12 +37,34 @@ function getGeneratedType(typeSchema) {
 
   // TO DO: Generate typescript code from schema
   switch (schemaType) {
-    case "number":
-    case "integer":
-    case "string":
-    case "boolean":
+    case "number": return "number"
+    case "integer": return "number"
+    case "string": return "string"
+    case "boolean": return "boolean"
     case "array":
     case "object":
+      try{
+        if(typeSchema.properties){
+          let requiredSet = new Set()
+          if(typeSchema.required){
+            for(const element of typeSchema.required){
+              requiredSet.add(element)
+            }
+          }
+          const schemaProperties = typeSchema.properties 
+          let returnString = "{\n"
+          for(const [key, value] of Object.entries(schemaProperties)){
+            returnString += "\t" + key
+            if(!requiredSet.has(key)){
+              returnString += '?'
+            }
+            returnString += ": " + getGeneratedType(value) + ";\n"
+          }
+          returnString += "}"
+          return returnString
+        }
+      }
+      catch(TypeError){return ""}
     default:
       return "";
   }
